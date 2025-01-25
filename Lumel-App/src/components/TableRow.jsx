@@ -20,7 +20,7 @@ const TableRow = ({ row, handleUpdate, isChild }) => {
   };
   useEffect(() => {
     setVariance((((row.value - row.OValue) / row.OValue) * 100).toFixed(2));
-  }, []);
+  }, [row]);
 
   return (
     <tr>
