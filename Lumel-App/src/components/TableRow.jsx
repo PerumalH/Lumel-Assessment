@@ -1,25 +1,18 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { StoreAction } from "../store/store";
 
-const TableRow = ({ row, handleUpdate, isChild }) => {
+const TableRow = ({ row, isChild, parent }) => {
   const [inputValue, setInputValue] = useState("");
-  const [variance, setVariance] = useState(
-    (((row.value - row.OValue) / row.OValue) * 100).toFixed(2)
-  );
+  const [variance, setVariance] = useState(0);
 
-  console.log(
-    (((row.value - row.OValue) / row.OValue) * 100).toFixed(2),
-    (80 / 1500) * 100
-  );
-  const updateVariance = (percent) => {
-    setVariance(percent);
-    const newValue = row.value + (row.value / 100) * percent;
-    console.log(newValue, "child");
-    handleUpdate(row, false, newValue);
-  };
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    setVariance((((row.value - row.OValue) / row.OValue) * 100).toFixed(2));
+    const Percent = ((row.value - row.prevalue) / row.prevalue) * 100;
+    setVariance(Percent.toFixed(2));
   }, [row]);
 
   return (
@@ -47,7 +40,16 @@ const TableRow = ({ row, handleUpdate, isChild }) => {
       <td style={{ textAlign: "center", padding: "8px" }}>
         <button
           onClick={() => {
-            updateVariance(inputValue);
+            const calcValue = (row.value / 100) * inputValue;
+            dispatch(
+              StoreAction.UpdateValueByPercentage({
+                parent: parent,
+                child: row.id,
+                isChild,
+                updateValue: calcValue,
+                isDirect: false,
+              })
+            );
           }}
         >
           Apply %
@@ -55,9 +57,17 @@ const TableRow = ({ row, handleUpdate, isChild }) => {
       </td>
       <td style={{ textAlign: "center", padding: "8px" }}>
         <button
-          onClick={() => {
-            handleUpdate(row, false, inputValue);
-          }}
+          onClick={() =>
+            dispatch(
+              StoreAction.UpdateValueByPercentage({
+                parent: parent,
+                child: row.id,
+                isChild: isChild,
+                updateValue: inputValue,
+                isDirect: true,
+              })
+            )
+          }
         >
           Set Value
         </button>

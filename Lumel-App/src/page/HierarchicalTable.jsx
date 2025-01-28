@@ -4,9 +4,8 @@ import { useSelector } from "react-redux";
 
 const HierarchicalTable = () => {
   const data = useSelector((state) => state.TableData);
-  console.log(data);
 
-  const grandTotal = 0;
+  const grandTotal = data.reduce((init, row) => init + row.value, 0);
 
   return (
     <table>
@@ -23,9 +22,14 @@ const HierarchicalTable = () => {
       <tbody>
         {data.map((row) => (
           <React.Fragment key={row.id}>
-            <TableRow row={row} isChild={false} />
+            <TableRow row={row} isChild={false} parent={row.id} />
             {row.children.map((child) => (
-              <TableRow key={child.id} row={child} isChild={true} />
+              <TableRow
+                key={child.id}
+                row={child}
+                isChild={true}
+                parent={row.id}
+              />
             ))}
           </React.Fragment>
         ))}
