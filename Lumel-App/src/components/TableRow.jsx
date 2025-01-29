@@ -37,8 +37,17 @@ const TableRow = ({ row, isChild, parent }) => {
           style={{ width: "100%", padding: "4px" }}
         />
       </td>
-      <td style={{ textAlign: "center", padding: "8px" }}>
+      <td
+        style={{
+          textAlign: "center",
+          padding: "8px",
+        }}
+      >
         <button
+          style={{
+            cursor: `${!isChild ? "none" : ""}`,
+            border: `${!isChild ? "none" : ""}`,
+          }}
           disabled={!isChild}
           onClick={() => {
             const calcValue = (row.value / 100) * inputValue;
@@ -51,6 +60,7 @@ const TableRow = ({ row, isChild, parent }) => {
                 isDirect: false,
               })
             );
+            setInputValue(() => "");
           }}
         >
           Apply %
@@ -58,7 +68,7 @@ const TableRow = ({ row, isChild, parent }) => {
       </td>
       <td style={{ textAlign: "center", padding: "8px" }}>
         <button
-          onClick={() =>
+          onClick={() => {
             dispatch(
               StoreAction.UpdateValueByPercentage({
                 parent: parent,
@@ -67,8 +77,9 @@ const TableRow = ({ row, isChild, parent }) => {
                 updateValue: inputValue,
                 isDirect: true,
               })
-            )
-          }
+            );
+            setInputValue(() => "");
+          }}
         >
           Set Value
         </button>

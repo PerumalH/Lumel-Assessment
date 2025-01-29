@@ -66,7 +66,15 @@ const HierarchicalTable = createSlice({
                     : +childValue.value + +updateValue,
                 };
               }
+              if (!isChild) {
+                const parentUpdate = (childValue.value / value.value) * 100;
 
+                return {
+                  ...childValue,
+                  prevalue: +childValue.value,
+                  value: ((updateValue / 100) * +parentUpdate).toFixed(2),
+                };
+              }
               return childValue;
             }),
           };
