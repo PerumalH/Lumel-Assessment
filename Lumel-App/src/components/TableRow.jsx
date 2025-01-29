@@ -39,6 +39,7 @@ const TableRow = ({ row, isChild, parent }) => {
       </td>
       <td style={{ textAlign: "center", padding: "8px" }}>
         <button
+          disabled={!isChild}
           onClick={() => {
             const calcValue = (row.value / 100) * inputValue;
             dispatch(
